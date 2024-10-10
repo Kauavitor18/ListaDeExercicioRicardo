@@ -1,0 +1,329 @@
+GO
+
+
+1 - Classes e Objetos Básicos
+package main
+import "fmt"
+type Carro struct {
+Marca string
+Modelo string
+Ano int
+}
+func (c Carro) Detalhes() string {
+return fmt.Sprintf("Marca: %s, Modelo: %s, Ano: %d", c.Marca, 
+c.Modelo, c.Ano)
+}
+func main() {
+carro1 := Carro{"Toyota", "Corolla", 2020}
+carro2 := Carro{"Honda", "Civic", 2018}
+carro3 := Carro{"Ford", "Focus", 2019}
+fmt.Println(carro1.Detalhes())
+fmt.Println(carro2.Detalhes())
+fmt.Println(carro3.Detalhes())
+}
+
+
+2 - Métodos (Acelerar e Frear)
+package main
+import "fmt"
+type Carro struct {
+Marca string
+Modelo string
+Ano int
+Velocidade int
+}
+func (c *Carro) Acelerar() {
+c.Velocidade += 10
+}
+func (c *Carro) Frear() {
+if c.Velocidade >= 10 {
+c.Velocidade -= 10
+}
+}
+func (c Carro) ExibirVelocidade() string {
+return fmt.Sprintf("Velocidade atual: %d km/h", c.Velocidade)
+}
+func main() {
+carro1 := Carro{"Toyota", "Corolla", 2020, 0}
+carro1.Acelerar()
+fmt.Println(carro1.ExibirVelocidade())
+carro1.Frear()
+fmt.Println(carro1.ExibirVelocidade())
+}
+
+3. Encapsulamento (ContaBancaria)
+
+package main
+import "fmt"
+type ContaBancaria struct {
+titular string
+saldo float64
+}
+func (c *ContaBancaria) Depositar(valor float64) {
+c.saldo += valor
+}
+func (c *ContaBancaria) Sacar(valor float64) {
+if valor <= c.saldo {
+c.saldo -= valor
+} else {
+fmt.Println("Saldo insuficiente")
+}
+}
+func (c ContaBancaria) ExibirSaldo() string {
+return fmt.Sprintf("Saldo atual: R$%.2f", c.saldo)
+}
+func main() {
+conta := ContaBancaria{titular: "João", saldo: 500}
+conta.Depositar(100)
+fmt.Println(conta.ExibirSaldo())
+conta.Sacar(200)
+fmt.Println(conta.ExibirSaldo())
+}
+
+4. Herança
+
+package main
+import "fmt"
+type Animal interface {
+Som() string
+}
+type Cachorro struct{}
+func (c Cachorro) Som() string {
+return "Latido"
+}
+type Gato struct{}
+func (g Gato) Som() string {
+return "Miau"
+}
+func main() {
+cachorro := Cachorro{}
+gato := Gato{}
+fmt.Println(cachorro.Som())
+fmt.Println(gato.Som())
+}
+
+5. Polimorfismo
+
+package main
+import "fmt"
+func FazerSom(animais []Animal) {
+for _, animal := range animais {
+fmt.Println(animal.Som())
+}
+}
+func main() {
+animais := []Animal{Cachorro{}, Gato{}}
+FazerSom(animais)
+}
+
+6. Composição
+
+package main
+import "fmt"
+type Motor struct {
+Potencia int
+}
+type Carro struct {
+Marca string
+Modelo string
+Motor Motor
+}
+func (c Carro) Detalhes() string {
+return fmt.Sprintf("Carro: %s, %s, Motor: %d HP", c.Marca, 
+c.Modelo, c.Motor.Potencia)
+}
+func main() {
+motor := Motor{150}
+carro := Carro{"Toyota", "Corolla", motor}
+fmt.Println(carro.Detalhes())
+}
+
+7. Associação
+
+package main
+import "fmt"
+type Professor struct {
+Nome string
+}
+type Escola struct {
+Nome string
+Professores []Professor
+}
+func (e *Escola) AdicionarProfessor(professor Professor) {
+e.Professores = append(e.Professores, professor)
+}
+func main() {
+professor1 := Professor{"Carlos"}
+escola := Escola{Nome: "Escola A"}
+escola.AdicionarProfessor(professor1)
+for _, prof := range escola.Professores {
+fmt.Println(prof.Nome)
+}
+}
+
+8. Agregação
+
+package main
+import "fmt"
+type Empregado struct {
+Nome string
+Cargo string
+Salario float64
+}
+type Empresa struct {
+Nome string
+Empregados []Empregado
+}
+func (e *Empresa) AdicionarEmpregado(empregado Empregado) {
+e.Empregados = append(e.Empregados, empregado)
+}
+func main() {
+empregado1 := Empregado{"João", "Desenvolvedor", 5000}
+empresa := Empresa{Nome: "Empresa X"}
+empresa.AdicionarEmpregado(empregado1)
+for _, emp := range empresa.Empregados {
+fmt.Println(emp.Nome, emp.Cargo)
+}
+}
+
+9. Interfaces/Protocolos
+
+package main
+import "fmt"
+type Imprimivel interface {
+Imprimir() string
+}
+type Relatorio struct{}
+func (r Relatorio) Imprimir() string {
+return "Imprimindo relatório..."
+}
+type Contrato struct{}
+func (c Contrato) Imprimir() string {
+return "Imprimindo contrato..."
+}
+func main() {
+documentos := []Imprimivel{Relatorio{}, Contrato{}}
+for _, doc := range documentos {
+fmt.Println(doc.Imprimir())
+}
+}
+
+10. Sobrecarga de Métodos
+
+package main
+import "fmt"
+func SomarDois(a int, b int) int {
+return a + b
+}
+func SomarTres(a int, b int, c int) int {
+return a + b + c
+}
+func main() {
+fmt.Println(SomarDois(2, 3))
+fmt.Println(SomarTres(2, 3, 4))
+}
+
+11. Classes Abstratas
+
+package main
+import "fmt"
+type Funcionario interface {
+CalcularSalario() float64
+}
+type FuncionarioHorista struct {
+Horas int
+ValorHora float64
+}
+func (f FuncionarioHorista) CalcularSalario() float64 {
+return float64(f.Horas) * f.ValorHora
+}
+type FuncionarioAssalariado struct {
+SalarioFixo float64
+}
+func (f FuncionarioAssalariado) CalcularSalario() float64 {
+return f.SalarioFixo
+}
+func main() {
+horista := FuncionarioHorista{160, 50}
+assalariado := FuncionarioAssalariado{5000}
+fmt.Println(horista.CalcularSalario())
+fmt.Println(assalariado.CalcularSalario())
+}
+
+12. Sobrecarga de Operadores
+
+package main
+import "fmt"
+type Produto struct {
+Nome string
+Preco float64
+}
+func SomarProduto(p1, p2 Produto) float64 {
+return p1.Preco + p2.Preco
+}
+func main() {
+produto1 := Produto{"Produto 1", 100}
+produto2 := Produto{"Produto 2", 150}
+fmt.Println(SomarProduto(produto1, produto2)) // Saída: 250
+}
+
+13. Métodos Estáticos
+
+package main
+import "fmt"
+func Fatorial(n int) int {
+if n == 0 || n == 1 {
+return 1
+}
+return n * Fatorial(n-1)
+}
+func main() {
+fmt.Println(Fatorial(5)) // Saída: 120
+}
+
+14. Singleton
+
+package main
+import "sync"
+var (
+instance *Configuracao
+once sync.Once
+)
+type Configuracao struct{}
+func GetInstancia() *Configuracao {
+once.Do(func() {
+instance = &Configuracao{}
+})
+return instance
+}
+func main() {
+config1 := GetInstancia()
+config2 := GetInstancia()
+fmt.Println(config1 == config2) // Saída: true (mesma 
+instância)
+}
+
+15. Exceções/Erros Personalizados
+
+package main
+import (
+"errors"
+"fmt"
+)
+type ContaBancaria struct {
+Saldo float64
+}
+func (c *ContaBancaria) Sacar(valor float64) error {
+if valor > c.Saldo {
+return errors.New("Saldo insuficiente")
+}
+c.Saldo -= valor
+return nil
+}
+func main() {
+conta := ContaBancaria{100}
+err := conta.Sacar(200)
+if err != nil {
+fmt.Println(err)
+}
+}
